@@ -20,3 +20,30 @@ ggplot(data = df_analysis, aes(x = vital_status, y = log2_PCMT1, fill = vital_st
   geom_boxplot(width = 0.4, alpha = 0.6, outlier.shape = NA) +
   geom_jitter(width = 0.15, alpha = 0.4, size = 1.5)
 
+df_analysis$os_days <- ifelse(is.na(df_analysis$days_to_death),
+                              df_analysis$days_to_last_follow_up,
+                              df_analysis$days_to_death)
+df_analysis$os_status <- ifelse(df_analysis$vital_status == "Dead", 1, 0)
+
+median_value <- median(df_analysis$log2_PCMT1, na.rm = TRUE)
+df_analysis$pcmt1_group <- ifelse(df_analysis$log2_PCMT1 >= median_value, "high", "low")
+table(df_analysis$pcmt1_group)
+
+library(survival)
+library(survminer)
+fit <- survfit(Surv(os_days, os_status) ~ pcmt1_group, data = df_analysis)
+print(fit)
+
+km_plot <- ggsurvplot(fit,
+           data = df_analysis, 
+           pval = TRUE, 
+           risk.table = TRUE,
+           xlab = "Time (Days)",
+           ylab = "Overall Survival Probability",
+           legend.title = "PMCT1",
+           legend.labs = c("High", "Low"),
+           risk.table.y.text = FALSE
+           )
+pdf("pcmt1_OS_KMPlot.pdf", width = 8, height = 6, onefile = FALSE)
+print(km_plot)
+dev.off()
