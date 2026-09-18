@@ -1,0 +1,4 @@
+Variable,Univariable_HR_95CI,Multivariable_HR_95CI,Univariable_P_value,Multivariable_P_value
+PCMT1 (High vs. Low),1.47 (1.15-1.87),1.59 (1.16-2.2),0.0019,0.0045
+Age (years),1.02 (1.01-1.03),1.02 (1.01-1.04),1.00E-04,0.005
+FIGO stage (Advance vs. Mid),2.46 (0.78-7.74),2.37 (0.75-7.48),0.1234,0.1406
